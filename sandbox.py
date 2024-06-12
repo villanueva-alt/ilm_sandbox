@@ -4,42 +4,41 @@ import re
 ## initial caps after any of these chars: whitespace, '-', '/', '.', '&', "'", '('.
 ## capitalize all of the following if they have a space on both sides: hs hr ms es avts pd
 ## capitalize first char after words that start with 'mc'
+## 
+# Assume: 
+# - str is all caps
+# - str is two names split with space between : not always
+#   -- will there ever be just one name entered? yes
+#   -- will there be more than two? yes 
 
 def fix_caps(str):
 
+    str_split = str.strip().split(" ")
+    
+    separators = ["-", "/", ".", "&","(",")","\t"]
     specials = ("Hs", "Hr", "Ms", "Es", "Avts", "Pd")
-
-    #strip white space on ends
-    str = str.strip()
-    #split string on special characters
-    str_split = re.split(r"[\s\-\/\.\',&()]", str)
-    #filter empty strings resulting from combo-special-character-match
-    str_split = list(filter(None, str_split))
 
     i = 0
     while i < len(str_split):
-        str[i].title()
+        
+        str_split[i] = str_split[i].title()
+
+        if str_split[i].startswith("Mc"):
+            pre, root = str_split[i][0:2], str_split[i][2:]
+            str_split[i] = pre + root.title()
+        
         for special in specials:
-            if str[i] == special:
-                str[i].upper()
+            if str_split[i].startswith(special):
+                str_split[i] = str_split[i].replace(special, special.upper())
+
+
         i += 1
 
-
-    # while(True):
-    #     split = False
-    #     for separator in separators:
-    #         if separator in str:
-    #             str_split = str.split(separator)
-    #             split = True
-    #             continue
-    #         else
-    #     break
-
-    return str_split
+    return " ".join(str_split)
 
 
 def main():
-    print(fix_caps('MR. SMITH- WIL&,SON'))
+    print(fix_caps('HS-ABC'))
 
 
 if __name__ == "__main__":
