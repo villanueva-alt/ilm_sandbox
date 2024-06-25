@@ -28,8 +28,9 @@ def fix_caps(str):
             str_split[i] = pre + root.title()
         
         for special in specials:
-            if str_split[i].startswith(special):
-                str_split[i] = str_split[i].replace(special, special.upper())
+            for sep in separators:
+                if (str_split[i].startswith(special) and sep in str_split[i]) or (len(special) == len(str_split[i])):
+                    str_split[i] = str_split[i].replace(special, special.upper())
 
 
         i += 1
@@ -38,7 +39,7 @@ def fix_caps(str):
 
 
 def main():
-    print(fix_caps('HS-ABC'))
+    print(fix_caps('ESPINOSA HS'))
 
 
 if __name__ == "__main__":
